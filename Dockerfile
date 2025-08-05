@@ -16,5 +16,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копирование всего кода проекта
 COPY . .
 
-# Команда для запуска сервера Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Переменная окружения для Django
+ENV PYTHONUNBUFFERED=1
+
+# Запуск приложения с gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "dds_app.wsgi:application"]
