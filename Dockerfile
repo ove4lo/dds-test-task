@@ -1,6 +1,7 @@
 FROM python:3.13-slim
 
-WORKDIR /app/cashflow_service
+# Установка рабочей директории в корень проекта
+WORKDIR /app
 
 # Установка системных зависимостей для psycopg2
 RUN apt-get update && apt-get install -y \
@@ -8,11 +9,11 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# requirements.txt в контейнер
+# Копирование файла требований и их установка
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Код проекта в контейнер
+# Копирование всего кода проекта
 COPY . .
 
 # Команда для запуска сервера Django
