@@ -21,8 +21,8 @@ class Category(models.Model):
     record_type = models.ForeignKey(
         RecordType,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True
+        null=False,
+        blank=False
     )
     parent_category = models.ForeignKey(
         'self',
@@ -46,25 +46,25 @@ class Record(models.Model):
     status = models.ForeignKey(
         Status,
         on_delete=models.SET_NULL,
-        null=True
+        null=False
     )
     record_type = models.ForeignKey(
         RecordType,
         on_delete=models.SET_NULL,
-        null=True
+        null=False
     )
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        null=True,
+        null=False,
         limit_choices_to={'parent_category__isnull': True},
         related_name='records'
     )
     subcategory = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         related_name='sub_records'
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
