@@ -45,28 +45,30 @@ class Record(models.Model):
     record_date = models.DateField(default=timezone.now)
     status = models.ForeignKey(
         Status,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=False
     )
     record_type = models.ForeignKey(
         RecordType,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=False
     )
     category = models.ForeignKey(
         Category,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=False,
         limit_choices_to={'parent_category__isnull': True},
         related_name='records'
     )
     subcategory = models.ForeignKey(
         Category,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=False,
         blank=False,
-        related_name='sub_records'
+        related_name='sub_records',
+        limit_choices_to={'parent_category__isnull': False}
     )
+
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     comment = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
