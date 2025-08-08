@@ -1,55 +1,90 @@
 from rest_framework import serializers
 from .models import Status, RecordType, Record, Category
+from django.core.validators import MinValueValidator
 
 # Сериализатор класса "Статус"
 class StatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Status
-        fields = 'all'
+        fields = '__all__'
 
 # Сериализатор класса "Статус"
 class RecordTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecordType
-        fields = 'all'
+        fields = '__all__'
 
 # Сериализатор класса "Категория"
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = 'all'
+        fields = '__all__'
+
+    # Метод валидации
+    def validate(self, data):
+        parent = data.get('parent_category')
+        record_type = data.get('record_type')
+
+        # У подкатегории обязательно должна быть родительская категория
+        if not parent and record_type:
+            raise serializers.ValidationError(
+                {"parent_category": "Подкатегория должна иметь родительскую категорию"}
+            )
+
+        # У категории обязательно должен быть тип (связь с ним)
+        if parent and not record_type:
+            raise serializers.ValidationError(
+                {"record_type": "Категория должна иметь тип"}
+            )
+
+        return data
 
 # Сериализатор класса "Запись"
 class RecordSerializer(serializers.ModelSerializer):
+    # Связанные поля обязательны
+    status = serializers.PrimaryKeyRelatedField(
+        queryset=Status.objects.all(),
+        required=True
+    )
+    record_type = serializers.PrimaryKeyRelatedField(
+        queryset=RecordType.objects.all(),
+        required=True
+    )
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.filter(parent_category__isnull=True),
+        required=True
+    )
+    subcategory = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.filter(parent_category__isnull=False),
+        required=True
+    )
+
+    # Сумма положительная
+    amount = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0.01)],  # Сумма > 0
+        required=True
+    )
+
     class Meta:
         model = Record
-        fields = ['amount', 'record_type', 'category', 'subcategory', 'comment', 'record_date', 'created_at']
+        fields = '__all__'
 
-    # Метод для валидации бизнес-правил
+    # Метод валидации
     def validate(self, data):
-        record_type = data.get('record_type')
         category = data.get('category')
         subcategory = data.get('subcategory')
+        record_type = data.get('record_type')
 
-        # 1. Проверка, что категория принадлежит данному типу
-        if category and record_type:
-            if category.record_type != record_type:
-                raise serializers.ValidationError(
-                    {"category": "Выбранная категория не соответствует типу записи."}
-                )
-
-        # 2. Проверка, что данная подкатегория принадлежит данной категории
-        if subcategory and category:
-            # Убеждаемся, что подкатегория действительно является дочерней для категории
-            if subcategory.parent_category != category:
-                raise serializers.ValidationError(
-                    {"subcategory": "Выбранная подкатегория не принадлежит к выбранной категории."}
-                )
-
-        # Проверка, что subcategory является подкатегорией
-        if subcategory and not subcategory.is_subcategory():
+        if category.record_type != record_type:
             raise serializers.ValidationError(
-                {"subcategory": "Поле 'subcategory' должно быть подкатегорией."}
+                {"category": "Категория не принадлежит выбранному типу"}
+            )
+
+        if subcategory.parent_category != category:
+            raise serializers.ValidationError(
+                {"subcategory": "Подкатегория не принадлежит выбранной категории"}
             )
 
         return data
