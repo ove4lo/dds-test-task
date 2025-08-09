@@ -68,7 +68,7 @@ class Command(BaseCommand):
 
         # Создание суперпользователя
         User = get_user_model()
-        if not User.objects.filter(username='alula').exists():
+        if not User.objects.filter(username='admin').exists():
             User.objects.create_superuser(
                 username='admin',
                 email='admin@example.com',
