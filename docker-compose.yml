@@ -14,8 +14,10 @@ services:
   web:
     build: .
     command: >
-      sh -c "python manage.py migrate --noinput &&
-             python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py makemigrations dds_app &&
+      python manage.py migrate --noinput &&
+      python manage.py init_db &&
+      python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
       - static_volume:/app/static
