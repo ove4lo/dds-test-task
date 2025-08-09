@@ -7,6 +7,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="ДДС API",
         description=" API для ДДС (движение денежных средств)",
+        default_version="v1",
     ),
     public=True,
 )
