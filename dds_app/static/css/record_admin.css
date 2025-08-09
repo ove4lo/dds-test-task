@@ -1,0 +1,89 @@
+/* Исправление стилей полей ввода */
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row textarea {
+    background-color: #2d3748;
+    color: #e2e8f0;
+    border: 1px solid #4a5568;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+/* Исправление выпадающих списков */
+.form-row select {
+    background-color: #2d3748;
+    color: #e2e8f0;
+    border: 1px solid #4a5568;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+}
+
+/* Изменение цвета в выпадающих списках */
+.form-row select option {
+    background-color: #2d3748;
+    color: #e2e8f0;
+}
+
+/* Улучшение видимости фокуса */
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+    outline: none;
+    border-color: #63b3ed;
+    box-shadow: 0 0 5px #63b3ed;
+}
+
+/* Стили для иконок в столбце действий */
+.actions_column a.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin: 0 4px;
+    padding: 2px;
+}
+
+.actions_column i {
+    font-size: 12px;
+    color: #a0aec0;
+    transition: color 0.2s;
+}
+
+.actions_column a.button:hover i {
+    color: #63b3ed;
+}
+
+/* Стили для кнопок действий на странице редактирования */
+.submit-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.submit-row a, .submit-row input[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.submit-row i {
+    font-size: 12px;
+    margin-right: 4px;
+    color: #a0aec0;
+}
+
+.submit-row a:hover i, .submit-row input[type="submit"]:hover i {
+    color: #63b3ed;
+}
+
+/* Общий фон */
+.field-box {
+    background-color: #1a202c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}

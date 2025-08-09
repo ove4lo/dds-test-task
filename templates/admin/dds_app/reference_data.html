@@ -1,0 +1,95 @@
+{% extends 'admin/base.html' %}
+{% load i18n admin_urls %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold text-white">Статусы</h2>
+        <div class="mt-4">
+            <a href="{% url 'admin:dds_app_status_add' %}" class="btn btn-primary">Добавить статус</a>
+        </div>
+        <table class="w-full mt-4 text-left border-collapse">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b border-gray-700 text-sm font-semibold text-gray-400">Название</th>
+                    <th class="py-2 px-4 border-b border-gray-700 text-sm font-semibold text-gray-400">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for status in status_list %}
+                <tr class="hover:bg-gray-700">
+                    <td class="py-2 px-4 border-b border-gray-700 text-white">{{ status.name }}</td>
+                    <td class="py-2 px-4 border-b border-gray-700">
+                        <a href="{% url 'admin:dds_app_status_change' status.pk %}" class="btn btn-sm btn-outline-info">Изменить</a>
+                        <a href="{% url 'admin:dds_app_status_delete' status.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="2" class="py-2 px-4 text-center text-gray-400">Нет статусов</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold text-white">Типы</h2>
+        <div class="mt-4">
+            <a href="{% url 'admin:dds_app_recordtype_add' %}" class="btn btn-primary">Добавить тип</a>
+        </div>
+        <table class="w-full mt-4 text-left border-collapse">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b border-gray-700 text-sm font-semibold text-gray-400">Название</th>
+                    <th class="py-2 px-4 border-b border-gray-700 text-sm font-semibold text-gray-400">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record_type in record_type_list %}
+                <tr class="hover:bg-gray-700">
+                    <td class="py-2 px-4 border-b border-gray-700 text-white">{{ record_type.name }}</td>
+                    <td class="py-2 px-4 border-b border-gray-700">
+                        <a href="{% url 'admin:dds_app_recordtype_change' record_type.pk %}" class="btn btn-sm btn-outline-info">Изменить</a>
+                        <a href="{% url 'admin:dds_app_recordtype_delete' record_type.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="2" class="py-2 px-4 text-center text-gray-400">Нет типов</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold text-white">Категории и Подкатегории</h2>
+        <div class="mt-4">
+            <a href="{% url 'admin:dds_app_category_add' %}" class="btn btn-primary">Добавить категорию/подкатегорию</a>
+        </div>
+        <table class="w-full mt-4 text-left border-collapse">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b border-gray-700 text-sm font-semibold text-gray-400">Название</th>
+                    <th class="py-2 px-4 border-b border-gray-700 text-sm font-semibold text-gray-400">Тип</th>
+                    <th class="py-2 px-4 border-b border-gray-700 text-sm font-semibold text-gray-400">Родитель</th>
+                    <th class="py-2 px-4 border-b border-gray-700 text-sm font-semibold text-gray-400">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in category_list %}
+                <tr class="hover:bg-gray-700">
+                    <td class="py-2 px-4 border-b border-gray-700 text-white">{{ category.name }}</td>
+                    <td class="py-2 px-4 border-b border-gray-700 text-white">{{ category.record_type.name }}</td>
+                    <td class="py-2 px-4 border-b border-gray-700 text-white">{% if category.parent_category %}{{ category.parent_category.name }}{% else %}-{% endif %}</td>
+                    <td class="py-2 px-4 border-b border-gray-700">
+                        <a href="{% url 'admin:dds_app_category_change' category.pk %}" class="btn btn-sm btn-outline-info">Изменить</a>
+                        <a href="{% url 'admin:dds_app_category_delete' category.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="py-2 px-4 text-center text-gray-400">Нет категорий</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

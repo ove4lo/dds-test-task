@@ -1,3 +1,4 @@
+from django.db.models import ProtectedError
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -79,13 +80,21 @@ class RecordViewSet(viewsets.ModelViewSet):
     serializer_class = RecordSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
-        'record_date': ['exact', 'gte', 'lte'],  # Фильтрация по дате (диапазон)
+        'record_date': ['exact', 'gte', 'lte'],
         'status': ['exact'],
         'record_type': ['exact'],
         'category': ['exact'],
         'subcategory': ['exact'],
     }
 
-    # Для фильтрации записи
-    def get_queryset(self):
-        return Record.objects.select_related('status', 'record_type', 'category', 'subcategory')
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # Удаление записи
+        try:
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ProtectedError:
+            return Response(
+                {"error": "Невозможно удалить запись из-за защиты связанных объектов. Убедитесь, что статус, тип, категория или подкатегория не используются в других записях."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
