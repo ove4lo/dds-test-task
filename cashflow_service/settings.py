@@ -28,10 +28,16 @@ DEBUG = True
 
 ALLOWED_HOSTS =  ['localhost', '127.0.0.1', '0.0.0.0']
 
+LANGUAGE_CODE = 'ru'
+TIME_ZONE = 'Asia/Vladivostok'
+USE_I18N = True  # Включение интернационализации
+USE_L10N = True  # Локализация дат и чисел
 
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
+    'unfold.contrib.filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +52,50 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django.contrib.postgres'
 ]
+
+# Настройки Unfold
+UNFOLD = {
+    "SITE_HEADER": "Админ-панель ДДС",
+    "SITE_TITLE": "ДДС-сервис",
+    "SITE_URL": "/",
+    "STYLES": [
+        "https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.min.css",
+    ],
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_app_models": False,
+        "navigation": [
+            {
+                "title": "Справочники",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Типы",
+                        "link": "/admin/dds_app/recordtype/",
+                    },
+                    {
+                        "title": "Статусы",
+                        "link": "/admin/dds_app/status/",
+                    },
+                    {
+                        "title": "Категории",
+                        "link": "/admin/dds_app/category/",
+                    },
+                ],
+            },
+            {
+                "title": "ДДС",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Записи ДДС",
+                        "link": "/admin/dds_app/record/",
+                    },
+                ],
+            },
+        ],
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -109,23 +159,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = '/app/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "dds_app/static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
